@@ -1,0 +1,7 @@
+{
+  "name": "Web de Juan José Rodríguez - Autor",
+  "description": "Página web oficial del escritor Juan José Rodríguez, autor de El Diario del Apocalipsis y El Teorema de la Venganza.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

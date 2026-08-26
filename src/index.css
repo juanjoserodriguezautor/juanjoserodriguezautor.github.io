@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-paper: #F7F3EB;
+    --color-paper-dark: #EAE3D2;
+    --color-paper-light: #FDFBF7;
+    --color-ink: #141210;
+    --color-accent: #8B2E12;
+    --color-accent-light: #C4501E;
+    --color-accent-hover: #A63816;
+    --color-muted: #685F54;
+  }
+
+  body {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+}
+
+.font-editorial {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+.font-sans-clean {
+  font-family: "Josefin Sans", sans-serif;
+}
+
+.font-body-sans {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* Custom smooth transitions and animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Book spine perspective effect */
+.book-shadow-3d {
+  box-shadow: -10px 10px 30px -5px rgba(0, 0, 0, 0.4), 
+              0 0 15px rgba(139, 46, 18, 0.15);
+}
+
+/* Glassmorphism for literary backdrop */
+.nav-backdrop {
+  background-color: rgba(247, 243, 235, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
