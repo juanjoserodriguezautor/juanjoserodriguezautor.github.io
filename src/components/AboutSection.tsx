@@ -85,7 +85,7 @@ export const AboutSection: React.FC = () => {
               <div className="mt-6 p-4 bg-[#EAE3D2] rounded-md border-l-2 border-[#8B2E12] relative">
                 <Quote className="w-4 h-4 text-[#8B2E12]/40 absolute top-2 right-2" />
                 <p className="font-editorial italic text-sm text-[#141210]/90 leading-relaxed">
-                  «La ciencia ficción no es predecir el futuro, sino examinar qué nos hace humanos cuando todo lo conocido cambia.»
+                  «La ciencia ficción no predice el futuro. Lo cuestiona. Cada novela Sci-Fi comienza con una simple pregunta: ¿Qué pasaría si...?»
                 </p>
               </div>
 
