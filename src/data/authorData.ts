@@ -46,7 +46,7 @@ export const BOOKS: Book[] = [
     coverImage: 'TEOREMA_DE_LA_VENGANZA_PORTADA_02C.jpg',
     amazonUrl: 'https://www.amazon.es/dp/B0F2SRKXGL',
     isNew: false,
-    publishedYear: '2024',
+    publishedYear: '2025',
     shortDesc: '¿Qué pasaría si un joven científico desafiara las leyes de la física? Daniel Leos domina la gravedad cuántica y construye el Gravitón Uno. Su descubrimiento lo catapulta a la fama, pero también lo arrastra a una peligrosa espiral de envidia, traición y conspiración.',
     fullSynopsis: '¿Qué pasaría si un joven científico desafiara las leyes de la física? Daniel Leos domina la gravedad cuántica y construye el Gravitón Uno. Su descubrimiento lo catapulta a la fama mundial, pero también lo arrastra a una peligrosa espiral de envidia, espionaje corporativo y conspiraciones en las más altas esferas del poder.\n\nCuando las fuerzas que intentan arrebatarle su creación amenazan lo que más ama, Daniel comprenderá que la física no es la única ley inquebrantable: toda acción desencadena una reacción equivalente... y la venganza puede calcularse con precisión matemática.',
     sampleExcerpt: '"El cansancio parecía haber marcado cada arruga en el rostro de Daniel, un cansancio que iba más allá de lo físico, penetrando hasta los rincones más profundos de su ser. Había pasado noches mal durmiendo, reflexionando sobre aquella situación desesperada en la que lo habían colocado. Cada segundo que pasaba sentía cómo una parte de su humanidad se desmoronaba, y la decisión que estaba a punto de tomar parecía un salto al vacío, sin retorno. Respiró hondo, tragándose una última pizca de duda mientras miraba a su alrededor...."',
