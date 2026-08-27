@@ -6,7 +6,7 @@ export const AUTHOR_INFO = {
   subline: 'Escritor · Ciencia Ficción · Fantasía',
   role: 'Escritor español',
   // Puedes cambiar esta ruta por la de tu archivo local en GitHub (ej: './assets/autor.jpg') o tu URL personalizada
-  photoUrl: 'Designer (13).png',
+  photoUrl: './portada-autor.png',
   bioParagraphs: [
     'Apasionado por la ciencia ficción desde siempre, encontré en la obra de Philip K. Dick no solo una fuente de inspiración, sino una puerta a mundos donde la realidad es solo una sugerencia.',
     'Mi amor por la literatura no se detiene ahí: la fantasía también ocupa un lugar especial en mi universo, al igual que los juegos de rol, donde la creatividad y la narrativa se entrelazan para dar vida a historias inesperadas.',
@@ -26,7 +26,7 @@ export const BOOKS: Book[] = [
     title: 'El Diario del Apocalipsis',
     genre: 'Post-Apocalíptico · Ciencia Ficción',
     // Puedes sustituir con tu archivo en GitHub (ej: './assets/diario-apocalipsis.jpg')
-    coverImage: 'Portada simple El diario del apocalipsis.jpg',
+    coverImage: './portada-apocalipsis.jpg',
     amazonUrl: 'https://www.amazon.es/dp/B0GXS3C7X2',
     isNew: true,
     publishedYear: '2026',
@@ -43,7 +43,7 @@ export const BOOKS: Book[] = [
     title: 'El Teorema de la Venganza',
     genre: 'Ciencia Ficción · Thriller Científico',
     // Puedes sustituir con tu archivo en GitHub (ej: './assets/teorema-venganza.jpg')
-    coverImage: 'TEOREMA_DE_LA_VENGANZA_PORTADA_02C.jpg',
+    coverImage: './portada-teorema.jpg',
     amazonUrl: 'https://www.amazon.es/dp/B0F2SRKXGL',
     isNew: false,
     publishedYear: '2025',
