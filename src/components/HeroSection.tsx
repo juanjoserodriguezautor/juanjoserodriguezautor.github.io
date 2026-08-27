@@ -73,7 +73,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectBook }) => {
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#EAE3D2] hover:bg-[#ded5c0] text-[#141210] font-sans-clean text-xs font-medium tracking-[0.18em] uppercase border border-[#8B2E12]/20 transition-colors"
               >
                 <BookOpen className="w-4 h-4 text-[#8B2E12]" />
-                <span>Leer primer capítulo</span>
+                <span>Leer fragmento</span>
               </button>
             </div>
 
@@ -108,7 +108,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectBook }) => {
               <div className="absolute top-4 right-4 z-20">
                 <span className="inline-flex items-center gap-1 bg-[#F7F3EB] text-[#141210] text-[10px] font-sans-clean font-semibold tracking-[0.2em] uppercase px-3 py-1 rounded-xs shadow-md border border-[#8B2E12]/30">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#8B2E12] animate-ping" />
-                  Novedad 2025
+                  Novedad 2026
                 </span>
               </div>
 
