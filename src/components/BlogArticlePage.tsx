@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Markdown from 'react-markdown';
 import { 
   Calendar, 
   Clock, 
@@ -8,7 +7,6 @@ import {
   Check, 
   Copy, 
   BookOpen, 
-  ExternalLink, 
   Sparkles,
   ShoppingBag
 } from 'lucide-react';
@@ -72,14 +70,90 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
 
   const otherPosts = BLOG_POSTS.filter((p) => p.id !== post.id);
 
-  const markdownContent = post.markdown 
+  // Formateador nativo de texto enriquecido (subtítulos, listas, citas, negritas)
+  const renderFormattedContent = (rawText: string) => {
+    const lines = rawText.split('\n');
+    const elements: React.ReactNode[] = [];
+    let currentList: string[] = [];
+
+    const flushList = (key: number) => {
+      if (currentList.length > 0) {
+        elements.push(
+          <ul key={`list-${key}`} className="space-y-2.5 my-4 pl-4 sm:pl-6">
+            {currentList.map((item, i) => (
+              <li key={i} className="flex items-start gap-2.5 text-base sm:text-lg leading-relaxed">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#8B2E12] mt-2.5 shrink-0" />
+                <span dangerouslySetInnerHTML={{ __html: formatInline(item) }} />
+              </li>
+            ))}
+          </ul>
+        );
+        currentList = [];
+      }
+    };
+
+    const formatInline = (text: string) => {
+      return text
+        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-[#141210]">$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em class="italic text-[#141210]">$1</em>');
+    };
+
+    lines.forEach((line, index) => {
+      const trimmed = line.trim();
+
+      if (!trimmed) {
+        flushList(index);
+        return;
+      }
+
+      if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
+        currentList.push(trimmed.replace(/^[*\-]\s+/, ''));
+        return;
+      }
+
+      flushList(index);
+
+      if (trimmed.startsWith('### ')) {
+        elements.push(
+          <h3 key={index} className="font-editorial text-2xl sm:text-3xl text-[#141210] font-normal mt-8 mb-3">
+            {trimmed.replace(/^###\s+/, '')}
+          </h3>
+        );
+      } else if (trimmed.startsWith('## ')) {
+        elements.push(
+          <h2 key={index} className="font-editorial text-2xl sm:text-3xl text-[#141210] font-normal mt-8 mb-4">
+            {trimmed.replace(/^##\s+/, '')}
+          </h2>
+        );
+      } else if (trimmed.startsWith('> ')) {
+        elements.push(
+          <blockquote key={index} className="font-editorial italic text-lg sm:text-xl text-[#8B2E12] border-l-2 border-[#8B2E12] pl-4 sm:pl-6 my-6 py-1">
+            <span dangerouslySetInnerHTML={{ __html: formatInline(trimmed.replace(/^>\s+/, '')) }} />
+          </blockquote>
+        );
+      } else if (trimmed === '---') {
+        elements.push(
+          <hr key={index} className="border-[#8B2E12]/20 my-6" />
+        );
+      } else {
+        elements.push(
+          <p key={index} className="text-base sm:text-lg leading-relaxed text-[#141210]/90 mb-4" dangerouslySetInnerHTML={{ __html: formatInline(trimmed) }} />
+        );
+      }
+    });
+
+    flushList(lines.length);
+    return elements;
+  };
+
+  const rawText = post.markdown 
     || (post.content ? post.content.join('\n\n') : post.summary);
 
   return (
     <div className="min-h-screen bg-[#F7F3EB] text-[#141210] pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         
-        {/* Navigation Breadcrumb & Back button */}
+        {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between gap-4 mb-8 pb-4 border-b border-[#8B2E12]/15">
           <button
             type="button"
@@ -98,7 +172,7 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
         {/* Article Container Card */}
         <article className="bg-[#EAE3D2] rounded-lg p-6 sm:p-10 lg:p-12 border border-[#8B2E12]/20 shadow-md">
           
-          {/* Category & Meta Header */}
+          {/* Header */}
           <header className="space-y-4 mb-8">
             <div className="flex flex-wrap items-center gap-3">
               <span className="bg-[#8B2E12] text-[#F7F3EB] text-[11px] font-sans-clean font-semibold tracking-widest uppercase px-3 py-1 rounded-xs shadow-xs">
@@ -119,17 +193,17 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
               </div>
             </div>
 
-            {/* Article Headline */}
+            {/* Title */}
             <h1 className="font-editorial text-3xl sm:text-5xl lg:text-5xl text-[#141210] font-normal leading-[1.15] tracking-tight">
               {post.title}
             </h1>
 
-            {/* Summary / Subtitle */}
+            {/* Summary */}
             <p className="font-editorial italic text-lg sm:text-xl text-[#8B2E12]/90 leading-relaxed">
               {post.summary}
             </p>
 
-            {/* Social Sharing Bar */}
+            {/* Social Share */}
             <div className="pt-4 border-t border-[#8B2E12]/15 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2 text-xs font-sans-clean text-[#685F54] font-medium">
                 <Share2 className="w-3.5 h-3.5 text-[#8B2E12]" />
@@ -141,7 +215,6 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
                   type="button"
                   onClick={handleCopyLink}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#F7F3EB] hover:bg-[#ded5c0] text-[#141210] border border-[#8B2E12]/20 text-xs font-sans-clean rounded-xs transition-colors shadow-xs"
-                  title="Copiar enlace directo de este artículo"
                 >
                   {copied ? (
                     <>
@@ -182,7 +255,7 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
               </div>
             </div>
 
-            {/* Archive / Dossier Badge or Series Header */}
+            {/* Archive Dossier Header */}
             {(post.archiveSeries || post.archiveNumber || post.archiveSubtitle) && (
               <div className="bg-[#F7F3EB] p-3.5 sm:p-4 rounded-xs border border-[#8B2E12]/30 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <div className="flex items-center gap-2.5 flex-wrap">
@@ -206,7 +279,7 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
             )}
           </header>
 
-          {/* Featured Image if exists */}
+          {/* Image */}
           {post.imageUrl && (
             <div className="mb-10 space-y-2">
               <div className="w-full max-h-[420px] overflow-hidden rounded-xs border border-[#8B2E12]/20 shadow-md bg-[#141210]">
@@ -224,11 +297,9 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
             </div>
           )}
 
-          {/* Main Markdown Content */}
-          <div className="prose max-w-none text-[#141210] font-body-sans text-base sm:text-lg leading-relaxed space-y-5">
-            <div className="markdown-content [&>p]:mb-5 [&>p]:leading-relaxed [&>h2]:font-editorial [&>h2]:text-2xl [&>h2]:sm:text-3xl [&>h2]:text-[#141210] [&>h2]:mt-8 [&>h2]:mb-4 [&>h3]:font-editorial [&>h3]:text-xl [&>h3]:sm:text-2xl [&>h3]:text-[#141210] [&>h3]:mt-6 [&>h3]:mb-3 [&>blockquote]:font-editorial [&>blockquote]:italic [&>blockquote]:text-lg [&>blockquote]:text-[#8B2E12] [&>blockquote]:border-l-2 [&>blockquote]:border-[#8B2E12] [&>blockquote]:pl-4 [&>blockquote]:my-6 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-4 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-4 [&>a]:text-[#8B2E12] [&>a]:underline [&>strong]:font-semibold">
-              <Markdown>{markdownContent}</Markdown>
-            </div>
+          {/* Main Body Content */}
+          <div className="space-y-1">
+            {renderFormattedContent(rawText)}
           </div>
 
           {/* Related Book Highlight Card */}
@@ -282,7 +353,7 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
             </div>
           )}
 
-          {/* Author Signature Box */}
+          {/* Signature */}
           <div className="mt-12 pt-6 border-t border-[#8B2E12]/20 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <img 
@@ -312,7 +383,7 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
 
         </article>
 
-        {/* Other Recent Posts Section */}
+        {/* Other Posts */}
         {otherPosts.length > 0 && (
           <div className="mt-16 space-y-6">
             <div className="flex items-center justify-between">
