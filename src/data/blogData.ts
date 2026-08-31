@@ -5,7 +5,7 @@ export const BLOG_POSTS: BlogPost[] = [
     id: 'navegacion-cuantica-gravedad',
     title: 'La navegación cuántica por gravedad ya existe',
     date: '31 de agosto, 2026',
-    readTime: '3 min de lectura',
+    readTime: '2 min de lectura',
     category: 'Ciencia & Ficción',
     archiveSeries: 'Archivo Daniel Leos',
     archiveNumber: 'Predicción #001',
