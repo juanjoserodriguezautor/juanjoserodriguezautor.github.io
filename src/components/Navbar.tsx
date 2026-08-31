@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, BookOpen, User, Mail, Home } from 'lucide-react';
+import { Menu, X, BookOpen, User, Mail, Home, Newspaper } from 'lucide-react';
 import { AUTHOR_INFO } from '../data/authorData';
 
 interface NavbarProps {
   onOpenBookModal?: () => void;
+  isArticlePage?: boolean;
+  onBackToHome?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = () => {
+export const Navbar: React.FC<NavbarProps> = ({ isArticlePage = false, onBackToHome }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -15,7 +17,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
 
-      const sections = ['hero', 'sobre-mi', 'libros', 'contacto'];
+      const sections = ['hero', 'sobre-mi', 'libros', 'noticias', 'contacto'];
       const scrollPosition = window.scrollY + 120;
 
       for (const sectionId of sections) {
@@ -39,16 +41,36 @@ export const Navbar: React.FC<NavbarProps> = () => {
     { name: 'Inicio', href: '#hero', id: 'hero', icon: Home },
     { name: 'Autor', href: '#sobre-mi', id: 'sobre-mi', icon: User },
     { name: 'Libros', href: '#libros', id: 'libros', icon: BookOpen },
+    { name: 'Noticias', href: '#noticias', id: 'noticias', icon: Newspaper },
     { name: 'Contacto', href: '#contacto', id: 'contacto', icon: Mail },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
     setMobileMenuOpen(false);
+
+    if (isArticlePage && onBackToHome) {
+      onBackToHome();
+      setTimeout(() => {
+        if (href === '#hero') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      }, 100);
+    } else {
+      if (href === '#hero') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
   };
 
   return (
@@ -82,7 +104,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
         <nav id="desktop-navigation" aria-label="Navegación principal" className="hidden md:flex items-center gap-8">
           <ul className="flex items-center gap-8 list-none m-0 p-0">
             {navLinks.map((link) => {
-              const isActive = activeSection === link.id;
+              const isActive = !isArticlePage && activeSection === link.id;
               return (
                 <li key={link.id}>
                   <a
@@ -150,7 +172,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
           <ul className="flex flex-col gap-3 list-none p-0 m-0">
             {navLinks.map((link) => {
               const Icon = link.icon;
-              const isActive = activeSection === link.id;
+              const isActive = !isArticlePage && activeSection === link.id;
               return (
                 <li key={link.id}>
                   <a
