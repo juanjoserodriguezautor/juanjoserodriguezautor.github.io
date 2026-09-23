@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://juanjoserodriguezautor.github.io/sitemap.xml

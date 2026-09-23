@@ -62,8 +62,11 @@ export const BooksSection: React.FC<BooksSectionProps> = ({ onSelectBook }) => {
                   <img
                     src={book.coverImage}
                     alt={`Portada de ${book.title}`}
+                    width={200}
+                    height={300}
                     className="w-full h-full object-cover"
                     loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>

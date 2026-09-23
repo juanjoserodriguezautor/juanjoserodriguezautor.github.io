@@ -10,7 +10,8 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 font-sans-clean text-xs tracking-widest uppercase">
         <p>© 2026 {AUTHOR_INFO.name} · Todos los derechos reservados</p>
         <p className="text-[#F7F3EB]/50 text-[10px]">
-                 </p>
+          {AUTHOR_INFO.tagline}
+        </p>
       </div>
     </footer>
   );

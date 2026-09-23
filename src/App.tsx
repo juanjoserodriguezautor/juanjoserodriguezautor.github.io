@@ -78,6 +78,13 @@ export default function App() {
     }, 50);
   };
 
+  const handleExploreBooks = () => {
+    const el = document.getElementById('libros');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div id="author-website-root" className="min-h-screen flex flex-col bg-[#F7F3EB] text-[#141210]">
       <Navbar 
@@ -96,7 +103,10 @@ export default function App() {
         </main>
       ) : (
         <main id="main-content" className="flex-1">
-          <HeroSection onSelectBook={handleSelectBook} />
+          <HeroSection 
+            onSelectBook={handleSelectBook} 
+            onExploreClick={handleExploreBooks} 
+          />
           <AboutSection />
           <BooksSection onSelectBook={handleSelectBook} />
           <BlogSection onSelectPost={handleSelectPost} onSelectBook={handleSelectBook} />

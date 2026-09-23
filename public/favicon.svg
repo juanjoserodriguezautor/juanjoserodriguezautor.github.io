@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="14" fill="#8B2E12"/>
+  <!-- Open Book Silhouette -->
+  <path d="M14 44.5C20 42 27 42.5 32 46C37 42.5 44 42 50 44.5V20.5C44 18 37 18.5 32 22C27 18.5 20 18 14 20.5V44.5Z" fill="#F7F3EB"/>
+  <path d="M32 22V46" stroke="#8B2E12" stroke-width="2" stroke-linecap="round"/>
+  <!-- Spine Curve -->
+  <path d="M14 44.5C20 42 27 42.5 32 46C37 42.5 44 42 50 44.5" stroke="#EAE3D2" stroke-width="1.5"/>
+  <!-- Sci-Fi Sparkle / Star on top -->
+  <path d="M32 10L33.5 14L37.5 15.5L33.5 17L32 21L30.5 17L26.5 15.5L30.5 14L32 10Z" fill="#F7F3EB"/>
+</svg>

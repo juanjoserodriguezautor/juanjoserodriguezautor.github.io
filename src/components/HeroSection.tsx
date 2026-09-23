@@ -5,12 +5,23 @@ import { Book } from '../types';
 
 interface HeroSectionProps {
   onSelectBook: (book: Book) => void;
-  onExploreClick: () => void;
+  onExploreClick?: () => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectBook, onExploreClick }) => {
   const featuredBook = BOOKS[0]; // Edición en català como obra destacada
   const [scrollY, setScrollY] = useState(0);
+
+  const handleExplore = () => {
+    if (onExploreClick) {
+      onExploreClick();
+    } else {
+      const el = document.getElementById('libros');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -61,7 +72,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectBook, onExplor
           <div className="pt-2 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
             <button
               type="button"
-              onClick={onExploreClick}
+              onClick={handleExplore}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#8B2E12] hover:bg-[#A63816] text-[#F7F3EB] font-sans-clean text-xs font-semibold tracking-[0.2em] uppercase rounded-xs transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.99]"
             >
               <span>Explorar libros</span>
@@ -116,8 +127,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectBook, onExplor
               <img
                 src={featuredBook.coverImage}
                 alt={`Portada del libro ${featuredBook.title}`}
+                width={320}
+                height={480}
                 className="w-full h-full object-cover"
                 loading="eager"
+                fetchPriority="high"
+                decoding="sync"
               />
 
               {/* Hover Overlay with Quick Actions */}

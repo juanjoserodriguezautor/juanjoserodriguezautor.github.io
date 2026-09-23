@@ -40,7 +40,7 @@ Hace tiempo, cuando escribí *El Teorema de la Venganza*, imaginé a Daniel Leos
 La ciencia todavía no ha llegado hasta ahí... pero da vértigo ver cómo algunas ideas que parecían pura ciencia ficción empiezan a asomar en los laboratorios.
 
 > *"Sin duda alguna, la realidad persigue a la ficción."*`,
-    imageUrl: './navegacion-cuantica.jpg',
+    imageUrl: './navegacion-cuantica.webp',
     imageCaption: 'Navegación cuántica por gravedad: el principio del Gravitón Uno en el mundo real.',
     relatedBookId: 'teorema-de-la-venganza',
     sourceLabel: 'Archivo y Cuaderno del Autor'
@@ -61,7 +61,7 @@ Poder apropar aquesta història de supervivència, soledat i perseverança en ca
 > *«Em dic Carlos Márquez i escric aquest diari per si pogués ajudar algú, tot i que no crec que sigui possible. També l’escric per no tornar-me boig en la situació en què em trobo.»*
 
 Podeu trobar-la tant en format digital com en edició física a Amazon a través de l'enllaç oficial.`,
-    imageUrl: './portada-apocalipsis-cat.jpg',
+    imageUrl: './portada-apocalipsis-cat.webp',
     imageCaption: 'Nova portada d’El Diari de l’Apocalipsi en català.',
     relatedBookId: 'diari-del-apocalipsi',
     sourceUrl: 'https://www.amazon.es/dp/B0H34HRSFB',

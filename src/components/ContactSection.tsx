@@ -46,12 +46,12 @@ export const ContactSection: React.FC = () => {
         setStatus('success');
         setFormData({ nombre: '', email: '', asunto: '', mensaje: '' });
       } else {
-        // Even if Formspree demo limits or network, provide graceful feedback
-        setStatus('success'); // Fallback graceful UX for preview environment
+        setStatus('error');
+        setErrorMessage('Hubo un problema al procesar el envío. Por favor, inténtalo de nuevo o contáctame por redes sociales.');
       }
     } catch (err) {
-      // Graceful fallback simulation for preview environment
-      setStatus('success');
+      setStatus('error');
+      setErrorMessage('Error de conexión al enviar el mensaje. Por favor, comprueba tu conexión o contáctame por redes sociales.');
     }
   };
 
@@ -113,6 +113,15 @@ export const ContactSection: React.FC = () => {
                 className="space-y-5 pt-2"
                 noValidate
               >
+                {status === 'error' && (
+                  <div
+                    role="alert"
+                    className="flex items-center gap-2.5 p-3.5 bg-red-950/40 border border-red-500/40 rounded-xs text-red-200 text-xs font-body-sans animate-fade-in"
+                  >
+                    <AlertCircle className="w-4 h-4 shrink-0 text-[#C4501E]" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
                 {/* Nombre Input with Accessible Label */}
                 <div>
                   <label
