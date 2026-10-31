@@ -3434,6 +3434,33 @@ class GameEngine {
       this.restart();
     });
 
+    const btnToggleHud = document.getElementById("btn-toggle-hud");
+    const hudHeader = document.querySelector(".hud-header");
+    if (btnToggleHud && hudHeader) {
+      btnToggleHud.addEventListener("click", () => {
+        hudHeader.classList.toggle("hud-collapsed");
+        const isCollapsed = hudHeader.classList.contains("hud-collapsed");
+        btnToggleHud.classList.toggle("hud-btn-active", isCollapsed);
+        const icon = document.getElementById("hud-toggle-icon");
+        if (icon) {
+          icon.textContent = isCollapsed ? "▲" : "📊";
+        }
+      });
+    }
+
+    if (this.dom.asciiBox) {
+      this.dom.asciiBox.addEventListener("click", () => {
+        if (this.dom.asciiBox.classList.contains("ascii-expanded")) {
+          this.dom.asciiBox.classList.remove("ascii-expanded");
+          this.dom.asciiBox.classList.add("ascii-collapsed");
+        } else if (this.dom.asciiBox.classList.contains("ascii-collapsed")) {
+          this.dom.asciiBox.classList.remove("ascii-collapsed");
+        } else {
+          this.dom.asciiBox.classList.add("ascii-expanded");
+        }
+      });
+    }
+
 
 
     // Configuración de pantalla de inicio (Title Screen) y Banda Sonora
@@ -5242,6 +5269,9 @@ class GameEngine {
   renderChoices(choices, promptText = "¿QUÉ DESEAS HACER?") {
     this.dom.choicesPrompt.textContent = promptText;
     this.dom.choicesContainer.innerHTML = "";
+    if (this.dom.choicesContainer) {
+      this.dom.choicesContainer.scrollTop = 0;
+    }
 
     let finalChoices = [...choices];
     const isGameOver = this.state && this.state.currentScene && this.state.currentScene.startsWith("game_over_");

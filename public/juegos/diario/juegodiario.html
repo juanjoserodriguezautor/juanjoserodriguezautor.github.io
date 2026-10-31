@@ -86,11 +86,14 @@
     <header class="hud-header">
       <div class="hud-top-row">
         <div class="title-badge">
-          <span class="icon">📖</span> EL DIARIO DEL APOCALIPSIS
+          <span class="icon">📖</span> <span class="title-text">EL DIARIO DEL APOCALIPSIS</span>
         </div>
         <div class="header-controls">
           <button id="btn-achievements" class="hud-btn" title="Ver logros y estadísticas de supervivencia">
-            <span>🏆 Logros</span>
+            <span class="btn-icon">🏆</span><span class="hud-btn-text"> Logros</span>
+          </button>
+          <button id="btn-toggle-hud" class="hud-btn mobile-hud-toggle" title="Mostrar/Ocultar detalles de estado y mochila">
+            <span id="hud-toggle-icon">📊</span>
           </button>
           <button id="btn-music" class="hud-btn" title="Pausar música">
             <span id="music-icon">🎵</span>
@@ -431,7 +434,8 @@
     <!-- Área principal de la historia -->
     <main class="story-viewport" id="story-viewport">
       <!-- Arte ASCII dinámico -->
-      <div class="ascii-art-container" id="ascii-container">
+      <div class="ascii-art-container" id="ascii-container" title="Toca para ampliar u ocultar la ilustración">
+        <div class="ascii-toggle-hint" id="ascii-toggle-hint">🖼️ Ilustración (toca para ver)</div>
         <pre id="ascii-display" class="ascii-art"></pre>
       </div>
 
