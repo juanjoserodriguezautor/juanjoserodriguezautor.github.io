@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
-import { Compass, Dices, Brain, Sparkles, BookOpen, Quote } from 'lucide-react';
+import React from 'react';
+import { Compass, Dices, Brain, Sparkles, Quote } from 'lucide-react';
 import { AUTHOR_INFO } from '../data/authorData';
 
 export const AboutSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'bio' | 'influences' | 'philosophy'>('bio');
-
   const pillars = [
     {
       id: 'dick',

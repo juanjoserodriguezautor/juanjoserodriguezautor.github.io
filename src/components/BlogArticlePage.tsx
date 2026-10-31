@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Calendar, 
-  Clock, 
-  ArrowLeft, 
-  Share2, 
-  Check, 
-  Copy, 
-  BookOpen, 
+import {
+  Calendar,
+  Clock,
+  ArrowLeft,
+  Share2,
+  Check,
+  Copy,
+  BookOpen,
   Sparkles,
-  ShoppingBag
+  ShoppingBag,
 } from 'lucide-react';
 import { BlogPost, Book } from '../types';
 import { BOOKS, AUTHOR_INFO } from '../data/authorData';
@@ -28,18 +28,31 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
   onSelectBook,
 }) => {
   const [copied, setCopied] = useState(false);
+  const [readProgress, setReadProgress] = useState(0);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.title = `${post.title} | ${AUTHOR_INFO.name}`;
+    document.title = `${post.title} — ${AUTHOR_INFO.name}`;
+
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0) {
+        setReadProgress(Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)));
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      document.title = `Web de ${AUTHOR_INFO.name} - Autor`;
+      document.title = `${AUTHOR_INFO.name} — Autor de Ciencia Ficción y Fantasía`;
+      window.removeEventListener('scroll', handleScroll);
     };
   }, [post]);
 
-  const currentUrl = typeof window !== 'undefined' 
-    ? `${window.location.origin}${window.location.pathname}#/noticias/${post.id}`
-    : `https://juanjoserodriguezautor.github.io/#/noticias/${post.id}`;
+  const currentUrl =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}${window.location.pathname}#/noticias/${post.id}`
+      : `https://juanjoserodriguezautor.github.io/#/noticias/${post.id}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(currentUrl).then(() => {
@@ -70,7 +83,31 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
 
   const otherPosts = BLOG_POSTS.filter((p) => p.id !== post.id);
 
-  // Formateador nativo de texto enriquecido (subtítulos, listas, citas, negritas)
+  // Parser seguro sin dangerouslySetInnerHTML (previene XSS al 100%)
+  const renderInlineSafe = (text: string): React.ReactNode[] => {
+    const tokenRegex = /(\*\*.*?\*\*|\*.*?\*)/g;
+    const parts = text.split(tokenRegex);
+
+    return parts.map((part, idx) => {
+      if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+        return (
+          <strong key={idx} className="font-semibold text-[#141210]">
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
+        return (
+          <em key={idx} className="italic text-[#141210]">
+            {part.slice(1, -1)}
+          </em>
+        );
+      }
+      return part;
+    });
+  };
+
+  // Formateador nativo seguro de texto enriquecido (subtítulos, listas, citas, negritas)
   const renderFormattedContent = (rawText: string) => {
     const lines = rawText.split('\n');
     const elements: React.ReactNode[] = [];
@@ -83,19 +120,13 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
             {currentList.map((item, i) => (
               <li key={i} className="flex items-start gap-2.5 text-base sm:text-lg leading-relaxed">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#8B2E12] mt-2.5 shrink-0" />
-                <span dangerouslySetInnerHTML={{ __html: formatInline(item) }} />
+                <span>{renderInlineSafe(item)}</span>
               </li>
             ))}
           </ul>
         );
         currentList = [];
       }
-    };
-
-    const formatInline = (text: string) => {
-      return text
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-[#141210]">$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em class="italic text-[#141210]">$1</em>');
     };
 
     lines.forEach((line, index) => {
@@ -127,17 +158,20 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
         );
       } else if (trimmed.startsWith('> ')) {
         elements.push(
-          <blockquote key={index} className="font-editorial italic text-lg sm:text-xl text-[#8B2E12] border-l-2 border-[#8B2E12] pl-4 sm:pl-6 my-6 py-1">
-            <span dangerouslySetInnerHTML={{ __html: formatInline(trimmed.replace(/^>\s+/, '')) }} />
+          <blockquote
+            key={index}
+            className="font-editorial italic text-lg sm:text-xl text-[#8B2E12] border-l-2 border-[#8B2E12] pl-4 sm:pl-6 my-6 py-1 bg-[#F7F3EB]/50 rounded-r-xs"
+          >
+            <span>{renderInlineSafe(trimmed.replace(/^>\s+/, ''))}</span>
           </blockquote>
         );
       } else if (trimmed === '---') {
-        elements.push(
-          <hr key={index} className="border-[#8B2E12]/20 my-6" />
-        );
+        elements.push(<hr key={index} className="border-[#8B2E12]/20 my-6" />);
       } else {
         elements.push(
-          <p key={index} className="text-base sm:text-lg leading-relaxed text-[#141210]/90 mb-4" dangerouslySetInnerHTML={{ __html: formatInline(trimmed) }} />
+          <p key={index} className="text-base sm:text-lg leading-relaxed text-[#141210]/90 mb-4">
+            {renderInlineSafe(trimmed)}
+          </p>
         );
       }
     });
@@ -146,19 +180,25 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
     return elements;
   };
 
-  const rawText = post.markdown 
-    || (post.content ? post.content.join('\n\n') : post.summary);
+  const rawText =
+    post.markdown || (post.content ? post.content.join('\n\n') : post.summary);
 
   return (
-    <div className="min-h-screen bg-[#F7F3EB] text-[#141210] pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F7F3EB] text-[#141210] pt-28 pb-20 px-4 sm:px-6 lg:px-8 relative">
+      {/* Barra de progreso de lectura superior */}
+      <div
+        className="fixed top-0 left-0 h-1 bg-[#8B2E12] z-[60] transition-all duration-150"
+        style={{ width: `${readProgress}%` }}
+        aria-hidden="true"
+      />
+
       <div className="max-w-4xl mx-auto">
-        
         {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between gap-4 mb-8 pb-4 border-b border-[#8B2E12]/15">
           <button
             type="button"
             onClick={onBackToHome}
-            className="inline-flex items-center gap-2 text-xs font-sans-clean font-semibold tracking-wider text-[#141210] hover:text-[#8B2E12] uppercase transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-sans-clean font-semibold tracking-wider text-[#141210] hover:text-[#8B2E12] uppercase transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 text-[#8B2E12]" />
             <span>Volver a la web principal</span>
@@ -171,7 +211,6 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
 
         {/* Article Container Card */}
         <article className="bg-[#EAE3D2] rounded-lg p-6 sm:p-10 lg:p-12 border border-[#8B2E12]/20 shadow-md">
-          
           {/* Header */}
           <header className="space-y-4 mb-8">
             <div className="flex flex-wrap items-center gap-3">
@@ -214,7 +253,7 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
                 <button
                   type="button"
                   onClick={handleCopyLink}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#F7F3EB] hover:bg-[#ded5c0] text-[#141210] border border-[#8B2E12]/20 text-xs font-sans-clean rounded-xs transition-colors shadow-xs"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#F7F3EB] hover:bg-[#ded5c0] text-[#141210] border border-[#8B2E12]/20 text-xs font-sans-clean rounded-xs transition-colors shadow-xs cursor-pointer"
                 >
                   {copied ? (
                     <>
@@ -232,7 +271,7 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
                 <button
                   type="button"
                   onClick={shareOnTwitter}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#141210] hover:bg-[#2c2723] text-[#F7F3EB] text-xs font-sans-clean rounded-xs transition-colors"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#141210] hover:bg-[#2c2723] text-[#F7F3EB] text-xs font-sans-clean rounded-xs transition-colors cursor-pointer"
                 >
                   <span>X (Twitter)</span>
                 </button>
@@ -240,7 +279,7 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
                 <button
                   type="button"
                   onClick={shareOnWhatsApp}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#128C7E] hover:bg-[#075E54] text-white text-xs font-sans-clean rounded-xs transition-colors"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#128C7E] hover:bg-[#075E54] text-white text-xs font-sans-clean rounded-xs transition-colors cursor-pointer"
                 >
                   <span>WhatsApp</span>
                 </button>
@@ -248,7 +287,7 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
                 <button
                   type="button"
                   onClick={shareOnFacebook}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1877F2] hover:bg-[#0c5dc7] text-white text-xs font-sans-clean rounded-xs transition-colors"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1877F2] hover:bg-[#0c5dc7] text-white text-xs font-sans-clean rounded-xs transition-colors cursor-pointer"
                 >
                   <span>Facebook</span>
                 </button>
@@ -298,9 +337,7 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
           )}
 
           {/* Main Body Content */}
-          <div className="space-y-1">
-            {renderFormattedContent(rawText)}
-          </div>
+          <div className="space-y-1">{renderFormattedContent(rawText)}</div>
 
           {/* Related Book Highlight Card */}
           {relatedBook && (
@@ -332,7 +369,7 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
                 <button
                   type="button"
                   onClick={() => onSelectBook(relatedBook)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#EAE3D2] hover:bg-[#ded5c0] text-[#141210] border border-[#8B2E12]/20 text-xs font-sans-clean uppercase tracking-wider rounded-xs transition-colors"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#EAE3D2] hover:bg-[#ded5c0] text-[#141210] border border-[#8B2E12]/20 text-xs font-sans-clean uppercase tracking-wider rounded-xs transition-colors cursor-pointer"
                 >
                   <BookOpen className="w-3.5 h-3.5 text-[#8B2E12]" />
                   <span>Sinopsis</span>
@@ -356,8 +393,8 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
           {/* Signature */}
           <div className="mt-12 pt-6 border-t border-[#8B2E12]/20 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <img 
-                src={AUTHOR_INFO.photoUrl} 
+              <img
+                src={AUTHOR_INFO.photoUrl}
                 alt={AUTHOR_INFO.name}
                 className="w-12 h-12 rounded-full object-cover border border-[#8B2E12]/30"
               />
@@ -374,13 +411,12 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
             <button
               type="button"
               onClick={onBackToHome}
-              className="inline-flex items-center gap-1 text-xs font-sans-clean font-semibold text-[#8B2E12] hover:underline uppercase"
+              className="inline-flex items-center gap-1 text-xs font-sans-clean font-semibold text-[#8B2E12] hover:underline uppercase cursor-pointer"
             >
               <span>Explorar toda la web</span>
               <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
             </button>
           </div>
-
         </article>
 
         {/* Other Posts */}
@@ -393,7 +429,7 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
               <button
                 type="button"
                 onClick={onBackToHome}
-                className="text-xs font-sans-clean text-[#8B2E12] hover:underline font-semibold uppercase"
+                className="text-xs font-sans-clean text-[#8B2E12] hover:underline font-semibold uppercase cursor-pointer"
               >
                 Ver todas
               </button>
@@ -433,7 +469,6 @@ export const BlogArticlePage: React.FC<BlogArticlePageProps> = ({
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

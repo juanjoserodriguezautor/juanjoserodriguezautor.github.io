@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>Juegos y Experiencias Interactivas · Juan José Rodríguez (Autor)</title>
+  <meta name="description" content="Descubre los juegos y aventuras interactivas oficiales basados en las novelas y universos de Juan José Rodríguez.">
+  
+  <!-- Google Analytics 4 (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y6BWR2LRWX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y6BWR2LRWX', {
+      'send_page_view': true,
+      'cookie_flags': 'SameSite=None;Secure'
+    });
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #080b10;
+      --bg-card: #0f1622;
+      --border: #1e293b;
+      --accent-amber: #f59e0b;
+      --accent-cyan: #38bdf8;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Merriweather', Georgia, serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      line-height: 1.6;
+    }
+    header {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 22, 34, 0.7);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .brand {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      color: var(--accent-amber);
+      text-decoration: none;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .back-link {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    main {
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 20px;
+      width: 100%;
+    }
+    .hero {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .hero-tag {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: rgba(56, 189, 248, 0.1);
+      padding: 4px 14px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 14px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--accent-amber);
+      margin-bottom: 12px;
+      text-shadow: 0 0 30px rgba(245, 158, 11, 0.35);
+    }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+      margin-bottom: 48px;
+    }
+    .game-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .game-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-amber);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 158, 11, 0.15);
+    }
+    .card-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: #10b981;
+      color: #030712;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .card-body {
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .card-genre {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      line-height: 1.3;
+    }
+    .card-desc {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 22px;
+      flex: 1;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+    .card-tag-item {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: #cbd5e1;
+    }
+    .card-btn {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      padding: 13px 20px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #030712;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .card-btn:hover {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+    }
+    .upcoming-card {
+      background: rgba(15, 22, 34, 0.4);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .upcoming-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      opacity: 0.6;
+    }
+    .upcoming-card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.15rem;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+    .upcoming-card p {
+      font-size: 0.88rem;
+      max-width: 320px;
+    }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    footer a {
+      color: var(--accent-amber);
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../index.html" class="brand">
+      <span>🎮</span> JUAN JOSÉ RODRÍGUEZ · JUEGOS
+    </a>
+    <a href="../index.html" class="back-link">
+      ← Volver a la Web Principal
+    </a>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="hero-tag">Catálogo Interactivo Oficial</div>
+      <h1>ZONA DE JUEGOS</h1>
+      <p>
+        Aventuras narrativas, decisiones de supervivencia y experiencias interactivas basadas en el universo literario de Juan José Rodríguez.
+      </p>
+    </div>
+
+    <div class="games-grid">
+      <!-- Juego 1: El Diario del Apocalipsis -->
+      <article class="game-card">
+        <span class="card-badge">Disponible Ahora</span>
+        <div class="card-body">
+          <div class="card-genre">Ciencia Ficción · Supervivencia Post-Apocalíptica</div>
+          <h2 class="card-title">El Diario del Apocalipsis: Aventura Interactiva</h2>
+          <p class="card-desc">
+            Ponte en la piel de Carlos Márquez en una Soria desierta, gestiona tu combustible, comida y cordura mientras cruzas Europa y construyes un nuevo hogar en la Base Naval de Rota. Incluye banda sonora original y dos capítulos inéditos para lectores.
+          </p>
+          <div class="card-tags">
+            <span class="card-tag-item">📖 8 Etapas + Epílogo</span>
+            <span class="card-tag-item">🎵 Banda Sonora Oficial</span>
+            <span class="card-tag-item">🔐 2 Capítulos Extra</span>
+            <span class="card-tag-item">📱 Móvil / Tablet / PC</span>
+          </div>
+          <a href="./diario/index.html" class="card-btn">
+            <span>🎮</span> JUGAR AHORA GRATIS
+          </a>
+        </div>
+      </article>
+
+      <!-- Espacio reservado para próximos juegos -->
+      <div class="upcoming-card">
+        <div class="upcoming-icon">✨</div>
+        <h3>Próximas Aventuras</h3>
+        <p>Nuevos juegos interactivos y narrativas ramificadas se irán sumando a este catálogo conforme se publiquen nuevos proyectos del autor.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      © 2026 Juan José Rodríguez Arana · Todos los derechos reservados.
+      <br>
+      <a href="../index.html">Página Oficial del Autor</a>
+    </p>
+  </footer>
+</body>
+</html>

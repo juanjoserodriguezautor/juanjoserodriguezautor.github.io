@@ -2,8 +2,11 @@ export interface Book {
   id: string;
   title: string;
   genre: string;
+  language?: string;
+  formats?: string;
   coverImage: string;
   amazonUrl?: string;
+  interactiveUrl?: string;
   isNew?: boolean;
   publishedYear: string;
   shortDesc: string;

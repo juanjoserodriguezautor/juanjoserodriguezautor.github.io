@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, ShoppingBag, ExternalLink, Sparkles } from 'lucide-react';
+import { BookOpen, ShoppingBag, ExternalLink, Sparkles, Gamepad2, Globe } from 'lucide-react';
 import { BOOKS } from '../data/authorData';
 import { Book } from '../types';
 
@@ -9,11 +9,10 @@ interface BooksSectionProps {
 
 export const BooksSection: React.FC<BooksSectionProps> = ({ onSelectBook }) => {
   return (
-    <section id="libros" className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto scroll-mt-20">
-      
+    <section id="libros" className="py-20 md:py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto scroll-mt-20">
       {/* Section Header */}
       <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-        <div className="inline-flex items-center gap-2 text-[#8B2E12] font-sans-clean text-xs font-medium tracking-[0.25em] uppercase">
+        <div className="inline-flex items-center gap-2 text-[#8B2E12] font-sans-clean text-xs font-semibold tracking-[0.25em] uppercase">
           <span className="w-6 h-px bg-[#8B2E12]" />
           <span>Catálogo de Obras</span>
           <span className="w-6 h-px bg-[#8B2E12]" />
@@ -24,7 +23,7 @@ export const BooksSection: React.FC<BooksSectionProps> = ({ onSelectBook }) => {
         </h2>
 
         <p className="font-body-sans text-sm sm:text-base text-[#141210]/75">
-          Historias de ciencia ficción y dilemas humanos disponibles en formato físico y digital en Amazon.
+          Historias de ciencia ficción y dilemas humanos disponibles en formato físico (tapa blanda) y digital (Kindle) en Amazon.
         </p>
       </div>
 
@@ -33,32 +32,38 @@ export const BooksSection: React.FC<BooksSectionProps> = ({ onSelectBook }) => {
         {BOOKS.map((book) => (
           <article
             key={book.id}
-            className="bg-[#EAE3D2] rounded-lg p-6 sm:p-7 border border-[#8B2E12]/20 shadow-sm hover:shadow-md transition-all duration-300 relative flex flex-col justify-between group"
+            className="bg-[#EAE3D2] rounded-lg p-6 sm:p-7 border border-[#8B2E12]/20 shadow-sm hover:shadow-lg hover:border-[#8B2E12]/40 transition-all duration-300 relative flex flex-col justify-between group"
           >
-            {/* New Release Badge */}
-            {book.isNew && (
-              <div className="absolute top-3 right-3 z-10">
+            {/* Top Meta Badges */}
+            <div className="flex items-center justify-between gap-2 mb-3">
+              <span className="inline-flex items-center gap-1 text-[10px] font-sans-clean font-semibold tracking-widest uppercase px-2.5 py-0.5 rounded-xs bg-[#F7F3EB] text-[#685F54] border border-[#8B2E12]/15">
+                <Globe className="w-3 h-3 text-[#8B2E12]" />
+                <span>{book.language || 'Español'}</span>
+                <span>·</span>
+                <span>{book.publishedYear}</span>
+              </span>
+
+              {book.isNew && (
                 <span className="inline-flex items-center gap-1 bg-[#8B2E12] text-[#F7F3EB] text-[10px] font-sans-clean font-semibold tracking-widest uppercase px-2.5 py-0.5 rounded-xs shadow-xs">
                   <Sparkles className="w-3 h-3" />
                   Novedad
                 </span>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Main Content: Cover + Information */}
             <div className="flex flex-col space-y-5">
-              
               {/* Book Cover Thumbnail */}
-              <div className="flex justify-center pt-2">
+              <div className="flex justify-center pt-1">
                 <div
-                  className="relative w-40 sm:w-44 aspect-[2/3] rounded-xs overflow-hidden shadow-lg border border-[#8B2E12]/20 group-hover:scale-[1.02] transition-transform duration-300 cursor-pointer bg-[#141210]"
+                  className="relative w-40 sm:w-44 aspect-[2/3] rounded-xs overflow-hidden shadow-lg border border-[#8B2E12]/25 group-hover:scale-[1.03] transition-transform duration-300 cursor-pointer bg-[#141210]"
                   onClick={() => onSelectBook(book)}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => e.key === 'Enter' && onSelectBook(book)}
+                  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onSelectBook(book)}
                   aria-label={`Ver detalles de ${book.title}`}
                 >
-                  <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-r from-white/20 to-transparent z-10 pointer-events-none" />
+                  <div className="absolute left-0 top-0 bottom-0 w-2.5 bg-gradient-to-r from-white/25 via-black/15 to-transparent z-10 pointer-events-none" />
                   <img
                     src={book.coverImage}
                     alt={`Portada de ${book.title}`}
@@ -73,13 +78,22 @@ export const BooksSection: React.FC<BooksSectionProps> = ({ onSelectBook }) => {
 
               {/* Book Details */}
               <div className="flex flex-col space-y-2.5">
-                <span className="font-sans-clean text-[11px] font-medium tracking-[0.22em] text-[#8B2E12] uppercase block">
+                <span className="font-sans-clean text-[11px] font-semibold tracking-[0.2em] text-[#8B2E12] uppercase block">
                   {book.genre}
                 </span>
-                
-                <h3 className="font-editorial text-2xl text-[#141210] font-normal leading-tight">
+
+                <h3
+                  onClick={() => onSelectBook(book)}
+                  className="font-editorial text-2xl sm:text-[26px] text-[#141210] hover:text-[#8B2E12] transition-colors font-normal leading-tight cursor-pointer"
+                >
                   {book.title}
                 </h3>
+
+                {book.formats && (
+                  <p className="text-[11px] font-sans-clean text-[#685F54] tracking-wider uppercase">
+                    Formato: {book.formats}
+                  </p>
+                )}
 
                 <p className="font-body-sans text-xs sm:text-sm text-[#141210]/80 leading-relaxed line-clamp-4 font-normal">
                   {book.shortDesc}
@@ -87,8 +101,8 @@ export const BooksSection: React.FC<BooksSectionProps> = ({ onSelectBook }) => {
 
                 {/* Highlights / Quote snippet */}
                 {book.quotes && book.quotes.length > 0 && (
-                  <div className="pt-2 border-t border-[#8B2E12]/15">
-                    <p className="font-editorial italic text-xs text-[#685F54]">
+                  <div className="pt-2.5 border-t border-[#8B2E12]/15">
+                    <p className="font-editorial italic text-xs sm:text-sm text-[#685F54]">
                       {book.quotes[0]}
                     </p>
                   </div>
@@ -101,7 +115,7 @@ export const BooksSection: React.FC<BooksSectionProps> = ({ onSelectBook }) => {
               <button
                 type="button"
                 onClick={() => onSelectBook(book)}
-                className="inline-flex items-center gap-1.5 text-xs font-sans-clean font-semibold tracking-wider text-[#141210] hover:text-[#8B2E12] uppercase transition-colors py-1.5 w-full sm:w-auto justify-center"
+                className="inline-flex items-center gap-1.5 text-xs font-sans-clean font-semibold tracking-wider text-[#141210] hover:text-[#8B2E12] uppercase transition-colors py-1.5 w-full sm:w-auto justify-center cursor-pointer"
               >
                 <BookOpen className="w-3.5 h-3.5 text-[#8B2E12]" />
                 <span>Sinopsis & Muestra</span>
@@ -121,6 +135,30 @@ export const BooksSection: React.FC<BooksSectionProps> = ({ onSelectBook }) => {
             </div>
           </article>
         ))}
+      </div>
+
+      {/* Interactive Experience Banner for El Diario del Apocalipsis */}
+      <div className="mt-12 bg-[#141210] text-[#F7F3EB] rounded-lg p-6 sm:p-8 border border-[#8B2E12]/40 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="space-y-2 text-center md:text-left max-w-2xl">
+          <div className="inline-flex items-center gap-2 text-[#C4501E] font-sans-clean text-[11px] font-semibold tracking-[0.22em] uppercase">
+            <Gamepad2 className="w-4 h-4" />
+            <span>Experiencia Interactiva Oficial · Incluye Capítulos Inéditos para Lectores</span>
+          </div>
+          <h3 className="font-editorial text-2xl sm:text-3xl text-[#F7F3EB] font-normal">
+            El Diario del Apocalipsis — La Aventura Interactiva
+          </h3>
+          <p className="font-body-sans text-xs sm:text-sm text-[#F7F3EB]/75 leading-relaxed">
+            Ponte en la piel de Carlos Márquez en una Soria desierta, gestiona tus recursos y toma decisiones de supervivencia. Si ya has leído la novela, desbloquea dos escenas extra exclusivas que continúan la historia años después.
+          </p>
+        </div>
+
+        <a
+          href="./juegos/diario/index.html"
+          className="shrink-0 inline-flex items-center justify-center gap-2.5 px-6 py-3.5 bg-[#8B2E12] hover:bg-[#A63816] text-[#F7F3EB] font-sans-clean text-xs font-semibold tracking-[0.2em] uppercase rounded-xs transition-all shadow-md hover:shadow-lg w-full md:w-auto"
+        >
+          <Gamepad2 className="w-4 h-4" />
+          <span>Jugar Ahora Gratis</span>
+        </a>
       </div>
     </section>
   );

@@ -10,15 +10,17 @@ import { Footer } from './components/Footer';
 import { BookDetailModal } from './components/BookDetailModal';
 import { Book, BlogPost } from './types';
 import { BLOG_POSTS } from './data/blogData';
+import { BOOKS } from './data/authorData';
 
 export default function App() {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [activeArticle, setActiveArticle] = useState<BlogPost | null>(null);
 
   useEffect(() => {
-    const parseUrlForArticle = () => {
+    const parseUrlState = () => {
       const searchParams = new URLSearchParams(window.location.search);
-      const queryPostId = searchParams.get('noticia') || searchParams.get('post') || searchParams.get('articulo');
+      const queryPostId =
+        searchParams.get('noticia') || searchParams.get('post') || searchParams.get('articulo');
       if (queryPostId) {
         const found = BLOG_POSTS.find((p) => p.id === queryPostId);
         if (found) {
@@ -27,10 +29,18 @@ export default function App() {
         }
       }
 
+      const queryBookId = searchParams.get('libro') || searchParams.get('obra');
+      if (queryBookId) {
+        const foundBook = BOOKS.find((b) => b.id === queryBookId);
+        if (foundBook) {
+          setSelectedBook(foundBook);
+        }
+      }
+
       const hash = window.location.hash;
-      const match = hash.match(/^#\/?(?:noticias|blog|noticia)\/([a-zA-Z0-9-_]+)/i);
-      if (match && match[1]) {
-        const postId = match[1];
+      const articleMatch = hash.match(/^#\/?(?:noticias|blog|noticia)\/([a-zA-Z0-9-_]+)/i);
+      if (articleMatch && articleMatch[1]) {
+        const postId = articleMatch[1];
         const found = BLOG_POSTS.find((p) => p.id === postId);
         if (found) {
           setActiveArticle(found);
@@ -38,18 +48,27 @@ export default function App() {
         }
       }
 
-      if (!match && !queryPostId) {
+      const bookMatch = hash.match(/^#\/?(?:libro|libros|obra)\/([a-zA-Z0-9-_]+)/i);
+      if (bookMatch && bookMatch[1]) {
+        const bookId = bookMatch[1];
+        const foundBook = BOOKS.find((b) => b.id === bookId);
+        if (foundBook) {
+          setSelectedBook(foundBook);
+        }
+      }
+
+      if (!articleMatch && !queryPostId) {
         setActiveArticle(null);
       }
     };
 
-    parseUrlForArticle();
-    window.addEventListener('hashchange', parseUrlForArticle);
-    window.addEventListener('popstate', parseUrlForArticle);
+    parseUrlState();
+    window.addEventListener('hashchange', parseUrlState);
+    window.addEventListener('popstate', parseUrlState);
 
     return () => {
-      window.removeEventListener('hashchange', parseUrlForArticle);
-      window.removeEventListener('popstate', parseUrlForArticle);
+      window.removeEventListener('hashchange', parseUrlState);
+      window.removeEventListener('popstate', parseUrlState);
     };
   }, []);
 
@@ -59,6 +78,9 @@ export default function App() {
 
   const handleCloseBookModal = () => {
     setSelectedBook(null);
+    if (window.location.hash.startsWith('#/libro/')) {
+      window.history.replaceState(null, '', window.location.pathname + '#libros');
+    }
   };
 
   const handleSelectPost = (post: BlogPost) => {
@@ -87,9 +109,9 @@ export default function App() {
 
   return (
     <div id="author-website-root" className="min-h-screen flex flex-col bg-[#F7F3EB] text-[#141210]">
-      <Navbar 
-        isArticlePage={Boolean(activeArticle)} 
-        onBackToHome={handleBackToHome} 
+      <Navbar
+        isArticlePage={Boolean(activeArticle)}
+        onBackToHome={handleBackToHome}
       />
 
       {activeArticle ? (
@@ -103,9 +125,9 @@ export default function App() {
         </main>
       ) : (
         <main id="main-content" className="flex-1">
-          <HeroSection 
-            onSelectBook={handleSelectBook} 
-            onExploreClick={handleExploreBooks} 
+          <HeroSection
+            onSelectBook={handleSelectBook}
+            onExploreClick={handleExploreBooks}
           />
           <AboutSection />
           <BooksSection onSelectBook={handleSelectBook} />
@@ -114,7 +136,7 @@ export default function App() {
         </main>
       )}
 
-      <Footer />
+      <Footer onSelectBook={handleSelectBook} />
 
       <BookDetailModal book={selectedBook} onClose={handleCloseBookModal} />
     </div>

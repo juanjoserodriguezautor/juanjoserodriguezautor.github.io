@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>El Diario del Apocalipsis - Aventura Interactiva · Juan José Rodríguez</title>
+  
+  <!-- Google Analytics 4 (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y6BWR2LRWX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    window.GA_MEASUREMENT_ID = 'G-Y6BWR2LRWX';
+    gtag('config', 'G-Y6BWR2LRWX', {
+      'send_page_view': true,
+      'cookie_flags': 'SameSite=None;Secure'
+    });
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="crt-overlay"></div>
+
+  <!-- Pantalla de Inicio / Title Screen con Banda Sonora -->
+  <div id="title-screen" class="title-screen-overlay">
+    <div class="title-screen-card">
+      <div class="title-screen-glow"></div>
+      <div class="title-screen-tag">EXPERIENCIA NARRATIVA INTERACTIVA</div>
+      <h1 class="title-screen-h1">EL DIARIO DEL APOCALIPSIS</h1>
+      <div class="title-screen-author">Basada en la novela de <strong>Juan José Rodríguez Arana</strong></div>
+
+      <div class="title-screen-quote">
+        «Me llamo Carlos Márquez y escribo este diario por si pudiera ayudar a alguien...  y para no volverme loco en la situación en la que me encuentro»
+      </div>
+
+      <div class="title-screen-intro">
+        <p>La civilización ha colapsado y estás completamente solo en tu piso de Soria. En un mundo que se ha quedado vacío y mudo, la esperanza es el recurso más difícil de conservar.</p>
+        <p>Explora, toma decisiones difíciles y escribe tu propio camino hacia la supervivencia.</p>
+      </div>
+
+      <div class="title-screen-actions">
+        <button id="btn-start-game" class="title-btn title-btn-primary">
+          <span class="btn-icon">🎮</span>
+          <span class="btn-text">COMENZAR AVENTURA</span>
+        </button>
+
+        <button id="btn-continue-game" class="title-btn title-btn-secondary" style="display: none;">
+          <span class="btn-icon">💾</span>
+          <span class="btn-text">CONTINUAR PARTIDA</span>
+        </button>
+
+        <button id="btn-title-achievements" class="title-btn title-btn-outline">
+          <span class="btn-icon">🏆</span>
+          <span class="btn-text">Logros y Récords</span>
+        </button>
+
+        <a href="../../index.html" class="title-btn title-btn-link" title="Volver a la página web del autor">
+          <span class="btn-icon">📖</span>
+          <span class="btn-text">Web Oficial del Autor</span>
+        </a>
+      </div>
+
+      <!-- Reproductor / Control de la Banda Sonora -->
+      <div class="title-music-box">
+        <div class="music-info">
+          <span class="music-badge">🎵 BANDA SONORA OFICIAL</span>
+          <span class="music-track-title">Tema Principal · El Diario del Apocalipsis</span>
+          <span id="title-music-status" class="music-status paused">Listo para reproducir</span>
+        </div>
+        <button id="btn-toggle-title-music" class="music-toggle-btn" title="Reproducir o pausar banda sonora">
+          <span id="title-music-btn-icon">▶</span>
+          <span id="title-music-btn-text">Reproducir Música</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="app" class="game-container">
+    <!-- Barra superior / HUD -->
+    <header class="hud-header">
+      <div class="hud-top-row">
+        <div class="title-badge">
+          <span class="icon">📖</span> EL DIARIO DEL APOCALIPSIS
+        </div>
+        <div class="header-controls">
+          <button id="btn-achievements" class="hud-btn" title="Ver logros y estadísticas de supervivencia">
+            <span>🏆 Logros</span>
+          </button>
+          <button id="btn-music" class="hud-btn" title="Pausar música">
+            <span id="music-icon">🎵</span>
+          </button>
+          <button id="btn-sound" class="hud-btn" title="Activar/Silenciar efectos de sonido">
+            <span id="sound-icon">🔊</span>
+          </button>
+          <button id="btn-restart" class="hud-btn" title="Reiniciar o reanudar etapa">
+            <span>🔄</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Medidores de supervivencia -->
+      <div class="stats-grid">
+        <div class="stat-card" id="stat-hope-card">
+          <div class="stat-label">
+            <span id="stat-hope-label">🧠 CORDURA / ESPERANZA</span>
+            <span id="stat-hope-val" class="stat-number">40%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-hope-bar" class="stat-bar-fill hope-bar" style="width: 40%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-health-card">
+          <div class="stat-label">
+            <span id="stat-health-label">❤️ SALUD FÍSICA</span>
+            <span id="stat-health-val" class="stat-number">100%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-health-bar" class="stat-bar-fill health-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Medidores dinámicos Etapa 2 (Cansancio y Gasoil) -->
+      <div class="stats-grid stage2-stats-grid" id="stage2-stats-grid" style="display: none;">
+        <div class="stat-card" id="stat-tired-card">
+          <div class="stat-label">
+            <span>💤 CANSANCIO AL VOLANTE</span>
+            <span id="stat-tired-val" class="stat-number">20%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-tired-bar" class="stat-bar-fill tired-bar" style="width: 20%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-fuel-card">
+          <div class="stat-label">
+            <span>⛽ DEPÓSITO GASOIL</span>
+            <span id="stat-fuel-val" class="stat-number">75%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-fuel-bar" class="stat-bar-fill fuel-bar" style="width: 75%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Medidores dinámicos Etapa 3 (Salud Laima, Confianza Thor y Fiebre de Carlos) -->
+      <div class="stats-grid stage3-stats-grid" id="stage3-stats-grid" style="display: none;">
+        <div class="stat-card" id="stat-laima-card">
+          <div class="stat-label">
+            <span id="stat-laima-label">🏥 SALUD CHICA</span>
+            <span id="stat-laima-val" class="stat-number">10%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-laima-bar" class="stat-bar-fill laima-bar critical" style="width: 10%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-thor-card">
+          <div class="stat-label">
+            <span id="stat-thor-label">🐕 CONFIANZA PERRO</span>
+            <span id="stat-thor-val" class="stat-number">20%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-thor-bar" class="stat-bar-fill thor-bar" style="width: 20%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-fever-card">
+          <div class="stat-label">
+            <span>🌡️ FIEBRE CARLOS</span>
+            <span id="stat-fever-val" class="stat-number">0%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-fever-bar" class="stat-bar-fill fever-bar" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Medidores dinámicos Etapa 4 (Gasoil, Dolor Pierna, Salud Laima y Confianza Thor) -->
+      <div class="stats-grid stage4-stats-grid" id="stage4-stats-grid" style="display: none;">
+        <div class="stat-card" id="stat-fuel-card-s4">
+          <div class="stat-label">
+            <span>⛽ DEPÓSITO GASOIL</span>
+            <span id="stat-fuel-val-s4" class="stat-number">5%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-fuel-bar-s4" class="stat-bar-fill fuel-bar low" style="width: 5%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-leg-card">
+          <div class="stat-label">
+            <span>🦵 DOLOR PIERNA CARLOS</span>
+            <span id="stat-leg-val" class="stat-number">20%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-leg-bar" class="stat-bar-fill leg-pain-bar" style="width: 20%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-laima-card-s4">
+          <div class="stat-label">
+            <span>🏥 SALUD LAIMA</span>
+            <span id="stat-laima-val-s4" class="stat-number">100%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-laima-bar-s4" class="stat-bar-fill laima-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-thor-card-s4">
+          <div class="stat-label">
+            <span>🐕 CONFIANZA THOR</span>
+            <span id="stat-thor-val-s4" class="stat-number">100%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-thor-bar-s4" class="stat-bar-fill thor-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Medidores dinámicos Etapa 5 (Vínculo/Pareja Laima, Estado Gabrielle, Luz Hotel y Confianza Thor) -->
+      <div class="stats-grid stage5-stats-grid" id="stage5-stats-grid" style="display: none;">
+        <div class="stat-card" id="stat-laima-rel-card">
+          <div class="stat-label">
+            <span id="stat-laima-rel-label">❤️ VÍNCULO LAIMA</span>
+            <span id="stat-laima-rel-val" class="stat-number">70%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-laima-rel-bar" class="stat-bar-fill laima-rel-bar" style="width: 70%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-gabrielle-card">
+          <div class="stat-label">
+            <span>🍸 GABRIELLE</span>
+            <span id="stat-gabrielle-val" class="stat-number">Embriagada</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-gabrielle-bar" class="stat-bar-fill gabrielle-bar" style="width: 50%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-hotel-power-card">
+          <div class="stat-label">
+            <span>⚡ LUZ HOTEL</span>
+            <span id="stat-hotel-power-val" class="stat-number">Activa (Solar)</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-hotel-power-bar" class="stat-bar-fill power-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-thor-card-s5">
+          <div class="stat-label">
+            <span>🐕 CONFIANZA THOR</span>
+            <span id="stat-thor-val-s5" class="stat-number">100%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-thor-bar-s5" class="stat-bar-fill thor-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Medidores dinámicos Etapa 6 (Salubridad Base Rota, Animales Rescatados, Pareja Laima y Confianza Thor) -->
+      <div class="stats-grid stage6-stats-grid" id="stage6-stats-grid" style="display: none;">
+                <div class="stat-card" id="stat-settlement-search-card" style="grid-column: span 2; display: none;">
+          <div class="stat-label">
+            <span>🗺️ BUSCANDO EL ASENTAMIENTO</span>
+            <span id="stat-settlement-search-val" class="stat-number">20%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-settlement-search-bar" class="stat-bar-fill settlement-search-bar" style="width: 20%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-base-health-card">
+          <div class="stat-label">
+            <span>⚓ SALUBRIDAD ROTA</span>
+            <span id="stat-base-health-val" class="stat-number">0%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-base-health-bar" class="stat-bar-fill base-health-bar" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-animals-card">
+          <div class="stat-label">
+            <span>🐾 ANIMALES</span>
+            <span id="stat-animals-val" class="stat-number">0</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-animals-bar" class="stat-bar-fill animals-bar" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-laima-card-s6">
+          <div class="stat-label">
+            <span id="stat-laima-label-s6">❤️ PAREJA LAIMA</span>
+            <span id="stat-laima-val-s6" class="stat-number">100%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-laima-bar-s6" class="stat-bar-fill laima-rel-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-thor-card-s6">
+          <div class="stat-label">
+            <span>🐕 CONFIANZA THOR</span>
+            <span id="stat-thor-val-s6" class="stat-number">100%</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-thor-bar-s6" class="stat-bar-fill thor-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Medidores dinámicos Escena Extra 1 (Mayo 2028 · 4 Años Después) -->
+      <div class="stats-grid extra1-stats-grid" id="extra1-stats-grid" style="display: none;">
+        <div class="stat-card" id="stat-extra1-colonia-card">
+          <div class="stat-label">
+            <span>🏡 COLONIA ROTA</span>
+            <span id="stat-extra1-colonia-val" class="stat-number">Próspera</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-extra1-colonia-bar" class="stat-bar-fill base-health-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-extra1-ninos-card">
+          <div class="stat-label">
+            <span>👶 GABRIELLE Y JOSÉ</span>
+            <span id="stat-extra1-ninos-val" class="stat-number">A salvo</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-extra1-ninos-bar" class="stat-bar-fill laima-rel-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-extra1-thor-card">
+          <div class="stat-label">
+            <span>🐕 GUARDIÁN THOR</span>
+            <span id="stat-extra1-thor-val" class="stat-number">Alerta</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-extra1-thor-bar" class="stat-bar-fill thor-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-extra1-extrano-card">
+          <div class="stat-label">
+            <span>🚗 EXTRAÑO EN VALLA</span>
+            <span id="stat-extra1-extrano-val" class="stat-number">Incógnita</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-extra1-extrano-bar" class="stat-bar-fill power-bar" style="width: 30%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Medidores dinámicos Escena Extra 2 (Año 2108 · 84 Años Después · Abuela Gabrielle) -->
+      <div class="stats-grid extra2-stats-grid" id="extra2-stats-grid" style="display: none;">
+        <div class="stat-card" id="stat-extra2-almenara-card">
+          <div class="stat-label">
+            <span>🔥 ALMENARA PUERTO</span>
+            <span id="stat-extra2-almenara-val" class="stat-number">Apagada</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-extra2-almenara-bar" class="stat-bar-fill hope-bar" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-extra2-radio-card">
+          <div class="stat-label">
+            <span>📻 RADIO DE CHARLES</span>
+            <span id="stat-extra2-radio-val" class="stat-number">En espera</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-extra2-radio-bar" class="stat-bar-fill power-bar" style="width: 40%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-extra2-velero-card">
+          <div class="stat-label">
+            <span>⛵ VELERO AMÉRICA</span>
+            <span id="stat-extra2-velero-val" class="stat-number">A 4 millas</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-extra2-velero-bar" class="stat-bar-fill base-health-bar" style="width: 25%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-extra2-comunidad-card">
+          <div class="stat-label">
+            <span>🏛️ GREMIOS DE ROTA</span>
+            <span id="stat-extra2-comunidad-val" class="stat-number">En alerta</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div id="stat-extra2-comunidad-bar" class="stat-bar-fill thor-bar" style="width: 80%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info de contexto e inventario -->
+      <div class="context-banner">
+        <div class="context-item">
+          <span class="ctx-tag">UBICACIÓN:</span>
+          <span id="ctx-location" class="ctx-value">Piso en Soria</span>
+        </div>
+        <div class="context-item">
+          <span class="ctx-tag">FECHA:</span>
+          <span id="ctx-date" class="ctx-value">9 de junio · 09:30 UTC+2</span>
+        </div>
+      </div>
+
+      <div class="inventory-bar">
+        <span class="inv-title">🎒 MOCHILA:</span>
+        <div id="inventory-list" class="inventory-tags">
+          <!-- Items dinámicos -->
+        </div>
+      </div>
+    </header>
+
+    <!-- Área principal de la historia -->
+    <main class="story-viewport" id="story-viewport">
+      <!-- Arte ASCII dinámico -->
+      <div class="ascii-art-container" id="ascii-container">
+        <pre id="ascii-display" class="ascii-art"></pre>
+      </div>
+
+      <!-- Feed narrativo (Diario) -->
+      <div class="narrative-feed" id="narrative-feed">
+        <!-- Entradas de texto generadas -->
+      </div>
+    </main>
+
+    <!-- Panel de opciones / Toma de decisiones -->
+    <footer class="decision-footer">
+      <div class="choices-title" id="choices-prompt">¿QUÉ DESEAS HACER?</div>
+      <div class="choices-grid" id="choices-container">
+        <!-- Botones generados dinámicamente -->
+      </div>
+    </footer>
+  </div>
+
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
