@@ -3505,6 +3505,62 @@ class GameEngine {
       });
     }
 
+    // Configuración PWA (Service Worker e Instalación)
+    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js")
+          .then((reg) => {
+            console.log("Service Worker PWA registrado en:", reg.scope);
+          })
+          .catch((err) => {
+            console.warn("Fallo al registrar Service Worker PWA:", err);
+          });
+      });
+    }
+
+    const btnInstallPwa = typeof document !== "undefined" ? document.getElementById("btn-install-pwa") : null;
+    const iosInstallHint = typeof document !== "undefined" ? document.getElementById("ios-install-hint") : null;
+    const isStandalone = typeof window !== "undefined" && (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true);
+
+    let deferredPrompt = null;
+    if (typeof window !== "undefined") {
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (btnInstallPwa && !isStandalone) {
+          btnInstallPwa.style.display = "inline-flex";
+        }
+      });
+
+      window.addEventListener("appinstalled", () => {
+        if (btnInstallPwa) btnInstallPwa.style.display = "none";
+        if (iosInstallHint) iosInstallHint.style.display = "none";
+        this.trackEvent("pwa_app_installed");
+      });
+    }
+
+    if (btnInstallPwa) {
+      btnInstallPwa.addEventListener("click", async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          try {
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === "accepted") {
+              btnInstallPwa.style.display = "none";
+            }
+          } catch (e) {
+            console.warn("Install prompt error:", e);
+          }
+          deferredPrompt = null;
+        }
+      });
+    }
+
+    const isIos = typeof navigator !== "undefined" && /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIos && !isStandalone && iosInstallHint) {
+      iosInstallHint.style.display = "block";
+    }
+
     this.pendingScrollAnchor = null;
     this.firstNewBlockInScene = null;
 

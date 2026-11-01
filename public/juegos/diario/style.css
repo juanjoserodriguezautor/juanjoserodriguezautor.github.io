@@ -1502,6 +1502,38 @@ body.epilogue-mode .choice-btn {
   box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
 }
 
+.title-btn-install {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.3) 100%);
+  border: 1px solid #10b981;
+  color: #6ee7b7;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
+}
+
+.title-btn-install:hover, .title-btn-install:active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.45) 0%, rgba(5, 150, 105, 0.45) 100%);
+  border-color: #34d399;
+  color: #a7f3d0;
+  transform: translateY(-1px);
+  box-shadow: 0 0 22px rgba(16, 185, 129, 0.5);
+}
+
+.ios-install-hint {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: #cbd5e1;
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.ios-install-hint strong {
+  color: var(--accent-cyan);
+}
+
 .title-btn-outline {
   background: rgba(56, 189, 248, 0.08);
   border: 1px solid var(--accent-cyan);

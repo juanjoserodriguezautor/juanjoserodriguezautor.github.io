@@ -22,6 +22,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+  
+  <!-- PWA & Mobile App Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0c0e12">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="El Diario">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -54,6 +66,16 @@
           <span class="btn-icon">💾</span>
           <span class="btn-text">CONTINUAR PARTIDA</span>
         </button>
+
+        <!-- Botón de Instalación PWA (Android / Chrome / Edge) -->
+        <button id="btn-install-pwa" class="title-btn title-btn-install" style="display: none;">
+          <span class="btn-icon">📲</span>
+          <span class="btn-text">INSTALAR APP EN TU MÓVIL</span>
+        </button>
+
+        <div id="ios-install-hint" class="ios-install-hint" style="display: none;">
+          📲 <strong>Instalar en iPhone / iPad:</strong> Pulsa el botón <strong>Compartir</strong> (icono de cuadrado con flecha ↑) y selecciona <strong>«Añadir a pantalla de inicio»</strong>.
+        </div>
 
         <button id="btn-title-achievements" class="title-btn title-btn-outline">
           <span class="btn-icon">🏆</span>
